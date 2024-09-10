@@ -1,18 +1,58 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+import tkinter as tk
 
-# Other files and folders
-.settings/
+# Função para atualizar o display
+def atualizar_display(valor):
+    display_var.set(display_var.get() + valor)
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+# Função para calcular a expressão
+def calcular():
+    try:
+        resultado = eval(display_var.get())
+        display_var.set(str(resultado))
+    except:
+        display_var.set("Erro")
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+# Função para limpar o display
+def limpar_display():
+    display_var.set("")
+
+# Configuração da janela principal
+janela = tk.Tk()
+janela.title("Calculadora")
+janela.geometry("400x500")
+
+# Variável do display
+display_var = tk.StringVar()
+
+# Display
+display = tk.Entry(janela, textvariable=display_var, font=("Arial", 24), bd=10, insertwidth=2, width=14, borderwidth=4)
+display.grid(row=0, column=0, columnspan=4)
+
+# Botões
+botoes = [
+    '7', '8', '9', '/',
+    '4', '5', '6', '*',
+    '1', '2', '3', '-',
+    '0', '.', '=', '+'
+]
+
+linha = 1
+coluna = 0
+
+for botao in botoes:
+    if botao == "=":
+        tk.Button(janela, text=botao, padx=20, pady=20, font=("Arial", 18), command=calcular).grid(row=linha, column=coluna, columnspan=2)
+        coluna += 1
+    else:
+        tk.Button(janela, text=botao, padx=20, pady=20, font=("Arial", 18), command=lambda b=botao: atualizar_display(b)).grid(row=linha, column=coluna)
+    
+    coluna += 1
+    if coluna > 3:
+        coluna = 0
+        linha += 1
+
+# Botão de limpar
+tk.Button(janela, text="C", padx=20, pady=20, font=("Arial", 18), command=limpar_display).grid(row=linha, column=coluna)
+
+# Iniciar o loop da interface gráfica
+janela.mainloop()
